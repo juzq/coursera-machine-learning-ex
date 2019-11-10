@@ -46,7 +46,7 @@ endfor
 for i = 1:example_num
     % 循环特征
     for j = 1:feature_num
-        # 样本标准话公式：(样本值 - 平均值) / 标准差
+        # 样本标准化公式：(样本值 - 平均值) / 标准差
         X_norm(i, j) = (X_norm(i, j) - mu(j)) / sigma(j);
     endfor
 endfor
