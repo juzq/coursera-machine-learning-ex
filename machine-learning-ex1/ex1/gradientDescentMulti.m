@@ -17,15 +17,13 @@ for iter = 1:num_iters
     %       of the cost function (computeCostMulti) and gradient here.
     %
 
+    theta_new = theta;
+    feature_size = size(X, 2);
+    for i = 1:feature_size
+        theta_new(i) = theta(i) - alpha * (X * theta - y)' * X(:, i) / m;
+    endfor
 
-
-
-
-
-
-
-
-
+    theta = theta_new;
 
     % ============================================================
 
