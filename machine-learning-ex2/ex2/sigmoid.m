@@ -9,9 +9,15 @@ g = zeros(size(z));
 % Instructions: Compute the sigmoid of each value of z (z can be a matrix,
 %               vector or scalar).
 
-z_length = size(z);
-for i = 1:z_length
-    g(1) = sigmoid(z(1));
+row = size(z, 1);
+column = size(z, 2);
+% 循环行
+for i = 1:row
+    % 循环列
+    for j = 1:column
+        % sigmoid公式：g(z) = 1 / (1 + e ^ (-z))
+        g(i, j) = 1 / (1 + e ^ (-z(i, j)));
+    endfor
 endfor
 
 % =============================================================
