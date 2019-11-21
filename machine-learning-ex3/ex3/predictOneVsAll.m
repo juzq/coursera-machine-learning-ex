@@ -30,8 +30,10 @@ X = [ones(m, 1) X];
 %       for each row.
 %       
 
-
-
+% 所有样本在10个数字的概率，维度：100 * 10
+A = sigmoid(X * all_theta');
+% 取得10个数字概率的最大值和下标
+[Value, p] = max(A, [], 2);
 
 
 

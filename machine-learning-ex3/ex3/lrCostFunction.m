@@ -36,14 +36,21 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
+% 代价函数向量公式：J = 1 / m * (-y' * log(h) - (1 - y)' * log(1-h)), h = sigmoid(X * theta)
 
+J = 1 / m * (-y' * log(sigmoid(X * theta)) - (1 - y)' * log(1 - sigmoid(X * theta)));
 
+% 梯度向量公式：grad = 1 / m * X' * (h - y), h = sigmoid(X * theta)
 
+grad = 1 / m * X' * (sigmoid(X * theta) - y);
 
+% 代价函数正则化公式(n > 1)：J2 = J + lambda / (2 * m) * sum(theta(n) .^ 2)
+J = J + lambda / (2 * m) * (sum(theta(2:end) .^ 2));
 
-
-
-
+% 梯度正则化公式(n > 1)：grad2 = grad + lambda / m * theta(n)
+theta_temp = theta;
+theta_temp(1) = 0;
+grad = grad + lambda / m * theta_temp;
 
 % =============================================================
 

@@ -38,6 +38,7 @@ m = size(X, 1);
 % Randomly select 100 data points to display
 rand_indices = randperm(m);
 sel = X(rand_indices(1:100), :);
+sel_result = y(rand_indices(1:100), :);
 
 displayData(sel);
 
@@ -86,3 +87,17 @@ pred = predictOneVsAll(all_theta, X);
 
 fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == y)) * 100);
 
+pred_sel = predictOneVsAll(all_theta, sel);
+fprintf('\nDisplay Accuracy: %f\n', mean(double(pred_sel == sel_result)) * 100);
+fprintf('\nDisplay Result:\n');
+for i = 0:9
+    for j = 1:10
+        num = pred_sel(i * 10 + j);
+        % 将10还原成0
+        if (num == 10)
+            num = 0;
+        endif
+        printf('%d ', num);
+    endfor
+    printf('\n');
+endfor
