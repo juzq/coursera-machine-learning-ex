@@ -62,23 +62,50 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% 转化y
+y2 = zeros(m, num_labels);
+for i = 1 : m
+    y2(i, y(i)) = 1;
+endfor
+
+% 计算h(x)
+a1 = [ones(m, 1) X];
+z2 = a1 * Theta1';
+a2 = [ones(m, 1) sigmoid(z2)];
+z3 = a2 * Theta2';
+h = a3 = sigmoid(z3);
+
+% 计算J(theta)
+for i = 1 : m
+    for k = 1: num_labels
+        J = J + (-1 * y2(i, k) * log(h(i, k)) - (1 - y2(i, k)) * log(1 - h(i, k)));
+    endfor
+endfor
+J = J / m;
 
 
+% 计算正则化后的J
+% 去掉theta的第一列，即去掉theta0
+Theta1_new = Theta1(:, 2:end);
+Theta2_new = Theta2(:, 2:end);
+J = J + (sum(sum(Theta1_new .^ 2)) + sum(sum(Theta2_new .^ 2))) * lambda / (2 * m);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+% 使用反向传播计算梯度
+for i = 1 : m
+    delta3 = a3(i, :) - y2(i, :);
+    Theta2_grad = Theta2_grad + delta3' * a2(i, :);
+    % 此处z2必须加上第一列偏差1
+    delta2 = Theta2' * delta3' .* sigmoidGradient([1 z2(i, :)])';
+    % 去掉delta2的第一列偏差
+    delta2 = delta2(2:end);
+    Theta1_grad = Theta1_grad + delta2 * a1(i, :);
+endfor
+Theta2_grad = Theta2_grad / m;
+Theta1_grad = Theta1_grad / m;
+% 正则化，需要将theta的第一列设置为0
+Theta2_grad = Theta2_grad + lambda / m * [zeros(size(Theta2_new, 1), 1) Theta2_new];
+Theta1_grad = Theta1_grad + lambda / m * [zeros(size(Theta1_new, 1), 1) Theta1_new];
 
 % -------------------------------------------------------------
 
