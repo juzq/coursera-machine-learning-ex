@@ -69,11 +69,11 @@ for i = 1 : m
 endfor
 
 % 计算h(x)
-a1 = [ones(m, 1) X];
-z2 = a1 * Theta1';
-a2 = [ones(m, 1) sigmoid(z2)];
-z3 = a2 * Theta2';
-h = a3 = sigmoid(z3);
+a1 = [ones(m, 1) X]';
+z2 = Theta1 * a1;
+a2 = [ones(1, m); sigmoid(z2)];
+z3 = Theta2 * a2;
+h = a3 = sigmoid(z3)';
 
 % 计算J(theta)
 for i = 1 : m
@@ -94,12 +94,12 @@ J = J + (sum(sum(Theta1_new .^ 2)) + sum(sum(Theta2_new .^ 2))) * lambda / (2 * 
 % 使用反向传播计算梯度
 for i = 1 : m
     delta3 = a3(i, :) - y2(i, :);
-    Theta2_grad = Theta2_grad + delta3' * a2(i, :);
+    Theta2_grad = Theta2_grad + delta3' * a2'(i, :);
     % 此处z2必须加上第一列偏差1
-    delta2 = Theta2' * delta3' .* sigmoidGradient([1 z2(i, :)])';
+    delta2 = Theta2' * delta3' .* sigmoidGradient([1 z2'(i, :)])';
     % 去掉delta2的第一列偏差
     delta2 = delta2(2:end);
-    Theta1_grad = Theta1_grad + delta2 * a1(i, :);
+    Theta1_grad = Theta1_grad + delta2 * a1'(i, :);
 endfor
 Theta2_grad = Theta2_grad / m;
 Theta1_grad = Theta1_grad / m;
