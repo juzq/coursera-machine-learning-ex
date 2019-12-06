@@ -73,16 +73,21 @@ a1 = [ones(m, 1) X]';
 z2 = Theta1 * a1;
 a2 = [ones(1, m); sigmoid(z2)];
 z3 = Theta2 * a2;
-h = a3 = sigmoid(z3)';
+a3 = sigmoid(z3);
+h = a3';
 
 % 计算J(theta)
-for i = 1 : m
-    for k = 1: num_labels
-        J = J + (-1 * y2(i, k) * log(h(i, k)) - (1 - y2(i, k)) * log(1 - h(i, k)));
-    endfor
-endfor
-J = J / m;
 
+% 循环方式
+%for i = 1 : m
+%    for k = 1: num_labels
+%        J = J + (-1 * y2(i, k) * log(h(i, k)) - (1 - y2(i, k)) * log(1 - h(i, k)));
+%    endfor
+%endfor
+%J = J / m;
+
+% 向量方式
+J = - 1 / m * (sum(sum(y2 .* log(h))) + sum(sum((1 - y2) .* log(1-h))));
 
 % 计算正则化后的J
 % 去掉theta的第一列，即去掉theta0
@@ -90,22 +95,31 @@ Theta1_new = Theta1(:, 2:end);
 Theta2_new = Theta2(:, 2:end);
 J = J + (sum(sum(Theta1_new .^ 2)) + sum(sum(Theta2_new .^ 2))) * lambda / (2 * m);
 
+% 梯度计算——循环方式
+%for i = 1 : m
+%    % 将y2转化为每一列为一个样本
+%    delta3 = a3(:, i) - y2(i, :)';
+%    Theta2_grad = Theta2_grad + delta3 * a2(:, i)';
+%    % Theta2需要使用去掉了第一列针对偏置的权重
+%    delta2 = Theta2_new' * delta3 .* sigmoidGradient(z2(:, i));
+%    Theta1_grad = Theta1_grad + delta2 * a1(:, i)';
+%endfor
+%Theta2_grad = Theta2_grad / m;
+%Theta1_grad = Theta1_grad / m;
 
-% 使用反向传播计算梯度
-for i = 1 : m
-    delta3 = a3(i, :) - y2(i, :);
-    Theta2_grad = Theta2_grad + delta3' * a2'(i, :);
-    % 此处z2必须加上第一列偏差1
-    delta2 = Theta2' * delta3' .* sigmoidGradient([1 z2'(i, :)])';
-    % 去掉delta2的第一列偏差
-    delta2 = delta2(2:end);
-    Theta1_grad = Theta1_grad + delta2 * a1'(i, :);
-endfor
-Theta2_grad = Theta2_grad / m;
-Theta1_grad = Theta1_grad / m;
+% 梯度计算——矩阵方式
+% 将y2转化为每一列为一个样本
+delta3 = a3 - y2';
+Theta2_grad = delta3 * a2' / m;
+% Theta2需要使用去掉了第一列针对偏置的权重
+delta2 = Theta2_new' * delta3 .* sigmoidGradient(z2);
+Theta1_grad = delta2 * a1' / m;
+
 % 正则化，需要将theta的第一列设置为0
-Theta2_grad = Theta2_grad + lambda / m * [zeros(size(Theta2_new, 1), 1) Theta2_new];
-Theta1_grad = Theta1_grad + lambda / m * [zeros(size(Theta1_new, 1), 1) Theta1_new];
+Theta1(:, 1) = 0;
+Theta2(:, 1) = 0;
+Theta2_grad = Theta2_grad + lambda / m * Theta2;
+Theta1_grad = Theta1_grad + lambda / m * Theta1;
 
 % -------------------------------------------------------------
 
