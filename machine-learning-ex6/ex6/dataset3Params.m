@@ -23,10 +23,28 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+% 待选列表
+test_set = [0.01 0.03 0.1 0.3 1 3 10 30];
 
+% 当前错误值
+error = 9999999999;
 
-
-
+for test_c = test_set
+    for test_sigma = test_set
+        % 使用C与sigma训练模型
+        model= svmTrain(X, y, test_c, @(x1, x2) gaussianKernel(x1, x2, test_sigma)); 
+        % 使用交叉验证集在模型上预测结果
+        predictions = svmPredict(model, Xval);
+        % 计算预测结果误差的平均值
+        predict = mean(double(predictions ~= yval));
+        % 小于当前错误值，则选为最优参数
+        if predict < error
+            error = predict;
+            C = test_c;
+            sigma = test_sigma;
+        end
+    endfor
+endfor
 
 
 % =========================================================================
