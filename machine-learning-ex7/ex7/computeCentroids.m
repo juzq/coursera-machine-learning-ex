@@ -26,12 +26,19 @@ centroids = zeros(K, n);
 % Note: You can use a for-loop over the centroids to compute this.
 %
 
+% 循环所有样本
+%count = zeros(K, 1);
+%for i = 1 : m
+%    id = idx(i);
+%    centroids(id, :) = centroids(id, :) + X(i, :);
+%    count(id) = count(id) + 1;
+%endfor
+%centroids = centroids ./ count;
 
-
-
-
-
-
+% 循环所有中心点（效率更高）
+for i = 1:K
+    centroids(i,:) = mean(X(idx==i,:),1);
+end
 
 % =============================================================
 

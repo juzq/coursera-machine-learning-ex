@@ -21,7 +21,18 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
-
+% 遍历所有样本
+for i = 1:size(X, 1)
+    distance = 9999999999;
+    for j = 1:K
+        % 距离公式：A(a1, a2)与B(b1, b2)之间的距离为根号下(a1-b1)^2 + (a2 - b2)^2
+        dist = sum((X(i, :) - centroids(j, :)) .^ 2);
+        if dist < distance
+            idx(i) = j;
+            distance = dist;
+        end
+    endfor
+endfor
 
 
 
