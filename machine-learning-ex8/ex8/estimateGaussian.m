@@ -21,12 +21,14 @@ sigma2 = zeros(n, 1);
 %               should contain variance of the i-th feature.
 %
 
+% 均值
+mu = sum(X) / m;
 
+% 公式计算
+% sigma2 = sum((X - mu) .^ 2) / m;
 
-
-
-
-
+% 函数计算
+sigma2 = var(X, 1);
 
 
 

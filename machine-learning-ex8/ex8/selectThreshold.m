@@ -23,17 +23,23 @@ for epsilon = min(pval):stepsize:max(pval)
     % Note: You can use predictions = (pval < epsilon) to get a binary vector
     %       of 0's and 1's of the outlier predictions
 
+    % 预测值
+    predictions = (pval < epsilon);
 
+    % yval:1->异常，0->非异常
+    % 真阳性：样本是阳性（True），预测结果也是阳性（True）
+    tp = sum((predictions == 1) & (yval == 1));
+    % 假阳性：样本是阴性（Flase），预测结果是阳性（True）
+    fp = sum((predictions == 1) & (yval == 0));
+    % 假阴性：样本是阳性（True），预测结果是阴性（Flase）
+    fn = sum((predictions == 0) & (yval == 1));
 
+    % 查准率：预测结果为真的真样本在所有预测结果为真样本中所占的比例。
+    prec = tp / (tp + fp);
+    % 召回率：预测结果为真的真样本在所有真样本中所占的比例。
+    rec = tp / (tp + fn);
 
-
-
-
-
-
-
-
-
+    F1 = (2 * prec * rec) / (prec + rec);
 
     % =============================================================
 

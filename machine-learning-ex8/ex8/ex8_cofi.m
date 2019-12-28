@@ -82,6 +82,7 @@ checkCostFunction;
 fprintf('\nProgram paused. Press enter to continue.\n');
 pause;
 
+kbhit;
 
 %% ========= Part 4: Collaborative Filtering Cost Regularization ========
 %  Now, you should implement regularization for the cost function for 
