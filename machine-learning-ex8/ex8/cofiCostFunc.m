@@ -40,9 +40,9 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
-J = sum(sum((X * Theta' - Y) .^ 2 .* R)) / 2;
+J = sum(sum((X * Theta' - Y) .^ 2 .* R)) / 2 + lambda / 2 * (sum(sum(Theta .^ 2)) + sum(sum(X .^ 2)));
 
-% 梯度：循环方式
+% 梯度：循环方式（有问题）
 %for i = 1 : num_movies
 %    for k = 1 : num_features
 %        grad = 0;
@@ -56,19 +56,9 @@ J = sum(sum((X * Theta' - Y) .^ 2 .* R)) / 2;
 %endfor
 
 % 梯度：矩阵方式
-X_grad = (X * Theta' - Y) .* R * Theta;
+X_grad = (X * Theta' - Y) .* R * Theta + lambda * X;
 
-Theta_grad = ((X * Theta' - Y) .* R)' * X;
-
-
-
-
-
-
-
-
-
-
+Theta_grad = ((X * Theta' - Y) .* R)' * X + lambda * Theta;
 
 % =============================================================
 
